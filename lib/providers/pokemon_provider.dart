@@ -10,30 +10,48 @@ import '../models/cardModel.dart';
 
 class PokeProvider with ChangeNotifier {
   bool isLoading = false;
-  List<cardModel> list = [];
-  List<Pokemon> pokemonList = [];
-
+  List<cardModel> pokeList = [];
+  List<Pokemon> descList = [];
   Pokemon pokemon = new Pokemon();
 
   Future<void> getData() async {
-    int pokeNum = 20;
     List<cardModel> tmp = [];
+    try {
+      isLoading = true;
+      Uri url = Uri.parse('https://pokeapi.co/api/v2/pokemon/');
+      final response = await http.get(url);
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+
+      tmp.add(cardModel.fromJson(responseData));
+      pokeList = tmp;
+      isLoading = false;
+      print('pppp ${pokeList.length}');
+
+      notifyListeners();
+    } catch (e) {
+      isLoading = false;
+    }
   }
 
-  Future<void> getSpecificPoke(String id) async {
+  Future<void> getSpecificPoke(String id, context) async {
     List<Pokemon> tmp = [];
     Uri url = Uri.parse('https://pokeapi.co/api/v2/pokemon/$id');
     try {
+      isLoading = true;
       final response = await http.get(url);
       final data = json.decode(response.body) as Map<String, dynamic>;
       pokemon = Pokemon.fromJson(data);
       isLoading = false;
+      descList = tmp;
       notifyListeners();
-      // inspect(pokemon);
     } catch (e) {
-      isLoading = true;
+      isLoading = false;
       print('Error: ' + e.toString());
       notifyListeners();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Pokemon not found!"),
+      ));
+      Navigator.of(context).pop();
       throw (e);
     }
   }

@@ -10,11 +10,23 @@ class cardModel with ChangeNotifier {
   cardModel({this.id, this.name, this.sprite, this.type, this.weight});
 
   factory cardModel.fromJson(Map<String, dynamic> json) {
+    bool types = json['types'].length == 1;
+
+    String handleTypes(types) {
+      if (types)
+        return json['types'][0]['type']['name'].toString();
+      else {
+        return json['types'][0]['type']['name'].toString() +
+            " & " +
+            json['types'][1]['type']['name'].toString();
+      }
+    }
+
     return cardModel(
         id: json["id"].toString(),
         name: json["name"].toString(),
-        sprite: json["sprite"],
-        type: json['types'], //todo?
-        weight: json['weight']);
+        sprite: json["sprites"]['front_default'],
+        type: handleTypes(types),
+        weight: json['weight'].toString());
   }
 }

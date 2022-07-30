@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../screens/PokemonDetails.dart';
+
 class SearchBar extends StatefulWidget {
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -17,8 +19,8 @@ class _SearchBarState extends State<SearchBar> {
 
   void handleSearch(value) {
     if (value.isNotEmpty) {
-      print(value);
-      //todo change screen
+      Navigator.of(context)
+          .pushNamed(PokeDetailScreen.routeName, arguments: value);
     }
   }
 

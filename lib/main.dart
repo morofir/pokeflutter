@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pokeflutter/providers/pokemon_provider.dart';
 import 'package:pokeflutter/screens/Homepage.dart';
+import 'package:pokeflutter/screens/PokemonDetails.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.white));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,19 +21,19 @@ class MyApp extends StatelessWidget {
         create: (context) => PokeProvider(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'PokeDex App',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const MyHomePage(title: 'PokeDex App'),
+          home: const MyHomePage(),
+          routes: {
+            PokeDetailScreen.routeName: (ctx) => PokeDetailScreen(),
+          },
         ));
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -39,12 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: HomePage(),
-      ),
-    );
+        body: SafeArea(
+      child: HomePage(),
+    ));
   }
 }

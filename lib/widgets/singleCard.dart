@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokeflutter/models/Pokemon.dart';
 
 class singleCard extends StatelessWidget {
   final dynamic pokemon;
@@ -11,13 +10,32 @@ class singleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
-      margin: EdgeInsets.only(bottom: 20, top: 5, left: 5, right: 5),
+      padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+      margin: EdgeInsets.only(bottom: 10, top: 5, left: 5, right: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        children: [Text(pokemon.name), Image.network(pokemon.url.toString())],
+      child: Card(
+        child: Column(children: [
+          Text(pokemon.name),
+          Image.network(pokemon.sprite),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, left: 20),
+                child: Text(
+                  "${pokemon.weight}",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, right: 20),
+                child: Text("${pokemon.type}", style: TextStyle(fontSize: 20)),
+              ),
+            ],
+          )
+        ]),
       ),
     );
   }

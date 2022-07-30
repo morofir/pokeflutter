@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokeflutter/providers/pokemon_provider.dart';
-import 'package:pokeflutter/widgets/searchbar/searchbar.dart';
+import 'package:pokeflutter/widgets/gridview/PokemonGrid.dart';
+import 'package:pokeflutter/widgets/searchbar/Searchbar.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/singleCard.dart';
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<PokeProvider>(context);
-    final pokemonsData = data.pokemonList;
+    final pokemonsData = data.pokeList;
 
     return Scaffold(
         body: Container(
@@ -46,30 +47,31 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(top: 10, right: 45),
             child: Text(
-              'Search Pokémon by entering their name',
+              'Search Pokémon by entering their name or National number.',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 17,
-                color: Colors.grey[600],
+                fontSize: 18,
+                color: Colors.grey[500],
               ),
             ),
           ),
           SearchBar(),
-          Expanded(
-              child: data.isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      onRefresh: () => _refreshData(context),
-                      child: ListView(
-                        padding: EdgeInsets.all(4),
-                        children: [
-                          Column(
-                              children: pokemonsData
-                                  .map((item) => singleCard(item, context))
-                                  .toList())
-                        ],
-                      ),
-                    ))
+          PokemonGrid(),
+          // Expanded(
+          //     child: data.isLoading
+          //         ? Center(child: CircularProgressIndicator())
+          //         : RefreshIndicator(
+          //             onRefresh: () => _refreshData(context),
+          //             child: ListView(
+          //               padding: EdgeInsets.all(4),
+          //               children: [
+          //                 Column(
+          //                     children: pokemonsData
+          //                         .map((item) => singleCard(item, context))
+          //                         .toList()),
+          //               ],
+          //             ),
+          //           )),
         ],
       ),
     ));
