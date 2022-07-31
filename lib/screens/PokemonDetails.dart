@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/Pokemon.dart';
 import '../providers/pokemon_provider.dart';
 import '../widgets/NameRadio.dart';
+import '../widgets/SaveCancelBtns.dart';
 
 class PokeDetailScreen extends StatefulWidget {
   static const routeName = '/pokeDetailScreen';
@@ -18,9 +19,9 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
   var _isInit = true;
 
   void didChangeDependencies() {
-    super.didChangeDependencies();
+    super
+        .didChangeDependencies(); //can call multiple time (unlike the initState)
     if (_isInit) {
-      final route = ModalRoute.of(context);
       final pokeId = ModalRoute.of(context)?.settings.arguments as String;
       Provider.of<PokeProvider>(context, listen: false)
           .getSpecificPoke(pokeId,
@@ -57,13 +58,17 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                       ),
                       Positioned(
                         right: 35,
-                        bottom: -60,
+                        bottom: -10,
                         left: 35,
-                        child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/loading.gif',
-                          placeholderFit: BoxFit.contain, //todo change
-                          image: pokeData.sprite,
-                          imageScale: 0.15,
+                        child: SizedBox(
+                          height: 250,
+                          width: 250,
+                          child: FadeInImage.assetNetwork(
+                            placeholder: 'assets/images/loading.gif',
+                            placeholderFit: BoxFit.scaleDown, //TODO change
+                            image: pokeData.sprite,
+                            imageScale: 0.35,
+                          ),
                         ),
                       ),
                     ],
@@ -97,6 +102,7 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                                 fontSize: 20, fontStyle: FontStyle.italic),
                           ),
                           NameRadio(),
+                          SaveCancelBtns(pokeId: pokeData.name),
                         ],
                       ),
                     ),

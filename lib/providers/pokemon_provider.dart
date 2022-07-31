@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:pokeflutter/models/Pokemon.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,9 +49,11 @@ class PokeProvider with ChangeNotifier {
       isLoading = false;
       print('Error: ' + e.toString());
       notifyListeners();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Pokemon not found!"),
-      ));
+      Get.snackbar("Error", "Pokemon not found!",
+          snackPosition: SnackPosition.BOTTOM);
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text("Pokemon not found!"),
+      // ));
       Navigator.of(context).pop();
       throw (e);
     }

@@ -23,15 +23,15 @@ class singleCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 20),
+                padding: const EdgeInsets.only(bottom: 0, left: 20),
                 child: Text(
                   "${pokemon.weight}",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 10, right: 20),
-                child: Text("${pokemon.type}", style: TextStyle(fontSize: 20)),
+                padding: const EdgeInsets.only(bottom: 0, right: 20),
+                child: Text("${pokemon.type}", style: TextStyle(fontSize: 12)),
               ),
             ],
           )

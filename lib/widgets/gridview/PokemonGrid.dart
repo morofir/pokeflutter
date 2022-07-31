@@ -47,7 +47,9 @@ class _PokemonGridPageState extends State<PokemonGrid> {
                       child: ScaleAnimation(
                         child: GestureDetector(
                           child: singleCard(data[index], context),
-                          onTap: () {},
+                          onTap: () {
+                            print('mor');
+                          },
 
                           //ontap navigate to details screen
                           // onTap: () {
@@ -62,12 +64,9 @@ class _PokemonGridPageState extends State<PokemonGrid> {
             : GridView.builder(
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
+                itemCount: 10,
                 itemBuilder: (BuildContext context, index) {
-                  return SizedBox(
-                    child: EmptyCard(),
-                    width: 100,
-                    height: 100,
-                  );
+                  return EmptyCard();
                 }));
   }
 }
@@ -77,27 +76,30 @@ class EmptyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(children: [
-        Text("Pokemon name"),
-        Image.asset('assets/images/noimage.jpg'),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10, left: 20),
-              child: Text(
-                "Type",
-                style: TextStyle(fontSize: 20),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(3, 5, 3, 0),
+      child: Card(
+        child: Column(children: [
+          Text("Pokemon name"),
+          Image.asset('assets/images/noimage.jpg'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, left: 10),
+                child: Text(
+                  "Type",
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10, right: 20),
-              child: Text("Weight", style: TextStyle(fontSize: 20)),
-            ),
-          ],
-        )
-      ]),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, right: 10),
+                child: Text("Weight", style: TextStyle(fontSize: 12)),
+              ),
+            ],
+          )
+        ]),
+      ),
     );
   }
 }

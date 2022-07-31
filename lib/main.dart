@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokeflutter/providers/pokemon_provider.dart';
+import 'package:pokeflutter/routes/AppPages.dart';
 import 'package:pokeflutter/screens/Homepage.dart';
 import 'package:pokeflutter/screens/PokemonDetails.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  await GetStorage.init();
+
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.white));
 }
@@ -19,32 +24,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context) => PokeProvider(),
-        child: MaterialApp(
+        child: GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const MyHomePage(),
+          home: HomePage(),
           routes: {
             PokeDetailScreen.routeName: (ctx) => PokeDetailScreen(),
           },
+          getPages: AppPages.pages,
         ));
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: HomePage(),
-    ));
   }
 }

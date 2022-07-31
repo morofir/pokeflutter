@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 import '../../screens/PokemonDetails.dart';
 
@@ -19,8 +21,7 @@ class _SearchBarState extends State<SearchBar> {
 
   void handleSearch(value) {
     if (value.isNotEmpty) {
-      Navigator.of(context)
-          .pushNamed(PokeDetailScreen.routeName, arguments: value);
+      Get.toNamed(PokeDetailScreen.routeName, arguments: value);
     }
   }
 
