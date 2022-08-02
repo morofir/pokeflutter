@@ -102,7 +102,7 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                                 fontSize: 20, fontStyle: FontStyle.italic),
                           ),
                           NameRadio(),
-                          SaveCancelBtns(pokeId: pokeData.name),
+                          SaveCancelBtns(pokeData: pokeData),
                         ],
                       ),
                     ),

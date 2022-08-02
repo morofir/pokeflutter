@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pokeflutter/models/pokeList.dart';
 import 'package:pokeflutter/widgets/singleCard.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
