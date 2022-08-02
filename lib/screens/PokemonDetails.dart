@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokeflutter/widgets/DetailsScreen.dart';
 
 import 'package:provider/provider.dart';
 
+import '../controllers/PokemonListController.dart';
 import '../models/Pokemon.dart';
 import '../providers/pokemon_provider.dart';
 import '../widgets/NameRadio.dart';
@@ -31,6 +33,8 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
     _isInit = false;
   }
 
+  final PokemonListController controller = Get.put(PokemonListController());
+
   @override
   Widget build(BuildContext context) {
     final providerData = Provider.of<PokeProvider>(context);
@@ -38,7 +42,8 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        body: providerData.isLoading
+        resizeToAvoidBottomInset: false,
+        body: providerData.isLoading && pokeData.sprite != null
             ? Center(child: CircularProgressIndicator())
             : Column(
                 children: [
@@ -65,7 +70,7 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                           width: 250,
                           child: FadeInImage.assetNetwork(
                             placeholder: 'assets/images/loading.gif',
-                            placeholderFit: BoxFit.scaleDown, //TODO change
+                            placeholderFit: BoxFit.scaleDown,
                             image: pokeData.sprite,
                             imageScale: 0.35,
                           ),
@@ -101,7 +106,7 @@ class _PokeDetailScreenState extends State<PokeDetailScreen> {
                             style: TextStyle(
                                 fontSize: 20, fontStyle: FontStyle.italic),
                           ),
-                          NameRadio(),
+                          NameRadio(pokeData.id),
                           SaveCancelBtns(pokeData: pokeData),
                         ],
                       ),

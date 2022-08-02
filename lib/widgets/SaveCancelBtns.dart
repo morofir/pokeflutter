@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pokeflutter/models/Pokemon.dart';
 
+import '../controllers/PokemonListController.dart';
+import '../screens/Homepage.dart';
+
 class SaveCancelBtns extends StatefulWidget {
   SaveCancelBtns({this.pokeData});
   final pokeData;
@@ -15,36 +18,41 @@ class SaveCancelBtns extends StatefulWidget {
 
 class _SaveCancelBtnsState extends State<SaveCancelBtns> {
   void handleAddPokemon(Pokemon p) {
-    print('pokemon: ' +
-        p.id.toString() +
-        " " +
-        p.name +
-        " " +
-        p.sprite +
-        " " +
-        p.type[0]['type']['name'].toString() +
-        " " +
-        p.weight.toString());
-    List<Pokemon> list = [];
-    list.add(p);
-    // controller.saveList(list);
-    // controller.saveListWithGetStorage("pokeList", list);
-    // final savedPokemons = controller.saveList(list);
-    // var listsaved = controller.readWithGetStorage("pokeList");
-    // print(listsaved);
+    var pokeObj = {
+      "id": p.id,
+      "name": p.name,
+      "sprite": p.sprite,
+      "type": p.type[0]['type']['name'].toString(),
+      "weight": p.weight.toString()
+    };
+    List<dynamic> list = [];
+
+    list.add(pokeObj);
+    var alreadyExist =
+        readList().toString().contains(pokeObj["sprite"]); //must be unique url
+    if (alreadyExist) {
+      Get.snackbar("Error!", "pokemon ${pokeObj["name"]} already in the list!",
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      controller.saveList(list);
+      Get.to(() => HomePage());
+      Get.snackbar("Success", "Pokemon ${pokeObj["name"]} added to list",
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
-  final ListStorage controller = Get.put(ListStorage());
+  final PokemonListController controller = Get.put(PokemonListController());
+  readList() => PokemonListController().readWithGetStorage('saveList');
 
   @override
   Widget build(BuildContext context) {
-    // final counter = controller.readCount();
+    final data = readList();
 
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Get.back(),
             iconSize: 45,
             icon: Icon(Icons.cancel),
           ),
@@ -55,49 +63,7 @@ class _SaveCancelBtnsState extends State<SaveCancelBtns> {
             icon: Icon(Icons.save),
           ),
         ]),
-        FloatingActionButton(
-          onPressed: () async {
-            setState(() {
-              // controller.increment();
-              // controller.writeCount(counter);
-            });
-          },
-          tooltip: 'Increment',
-          backgroundColor: Colors.cyan,
-          child: const Icon(Icons.add),
-        ),
       ],
     );
-  }
-}
-
-class ListStorage extends GetxController {
-  final box = GetStorage("pokeList");
-
-  //write to storage
-  saveListWithGetStorage(String storageKey, List<Pokemon> storageValue) async =>
-      await box.write(storageKey, jsonEncode(storageValue));
-
-  /// read from storage
-  readWithGetStorage(String storageKey) => box.read(storageKey);
-
-  saveList(List<Pokemon> listNeedToSave) {
-    /// getting all saved data
-    String oldSavedData = GetStorage().read('pokeList');
-
-    /// in case there is saved data
-    if (oldSavedData.isNotEmpty) {
-      /// create a holder list for the old data
-      List<dynamic> oldSavedList = jsonDecode(oldSavedData);
-
-      /// append the new list to saved one
-      oldSavedList.addAll(listNeedToSave);
-
-      /// save the new collection
-      return GetStorage().write('pokeList', oldSavedList);
-    } else {
-      /// in case of there is no saved data -- add the new list to storage
-      return GetStorage().write('pokeList', listNeedToSave);
-    }
   }
 }

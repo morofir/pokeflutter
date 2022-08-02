@@ -15,4 +15,22 @@ class Pokemon {
         type: json['types'], //todo?
         weight: json['weight']);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'sprite': this.sprite,
+      'type': this.type,
+      'weight': this.weight,
+    };
+  }
+
+  factory Pokemon.listFromJson(Map<String, dynamic> json) => Pokemon(
+        id: json["id"],
+        name: json["name"],
+        sprite: json["sprite"],
+        type: json["type"],
+        weight: json["weight"],
+      );
 }

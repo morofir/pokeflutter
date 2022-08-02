@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:pokeflutter/widgets/singleCard.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'dart:async';
+import 'dart:convert';
 
-import '../../providers/pokemon_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/PokemonListController.dart';
+
 
 class PokemonGrid extends StatefulWidget {
   PokemonGrid({Key? key}) : super(key: key);
@@ -12,92 +13,93 @@ class PokemonGrid extends StatefulWidget {
   _PokemonGridPageState createState() => _PokemonGridPageState();
 }
 
+final PokemonListController controller = Get.put(PokemonListController());
+
 class _PokemonGridPageState extends State<PokemonGrid> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PokeProvider>(context, listen: false).getData();
-  }
-
-  Future<void> _refreshData(BuildContext context) async {
-    await Provider.of<PokeProvider>(context, listen: false).getData();
+    new Timer.periodic(Duration(seconds: 0), (Timer t) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    final providerData = Provider.of<PokeProvider>(context);
-    final data = providerData.pokeList;
+    var dataAfterSaved = controller.readWithGetStorage('saveList');
+    var decodedList =
+        jsonDecode(dataAfterSaved ?? '{"text": "foo","text2":"bar"}');
 
     return Expanded(
-        child: data.isNotEmpty
-            ? Container(
-                child: GridView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.all(5),
-                  addAutomaticKeepAlives: true,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: data.length,
-                  itemBuilder: (BuildContext context, index) {
-                    return AnimationConfiguration.staggeredGrid(
-                      position: index,
-                      duration: const Duration(milliseconds: 500),
-                      columnCount: 2,
-                      child: ScaleAnimation(
-                        child: GestureDetector(
-                          child: singleCard(data[index], context),
-                          onTap: () {
-                            print('mor');
-                          },
-
-                          //ontap navigate to details screen
-                          // onTap: () {
-                          //
-                          // },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              )
+        child: decodedList != null && decodedList.length > 0
+            ? GridView.builder(
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemCount: decodedList.length ??= 6,
+                itemBuilder: (BuildContext context, index) {
+                  return GenericCard(decodedList[index]);
+                })
             : GridView.builder(
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 itemCount: 10,
                 itemBuilder: (BuildContext context, index) {
-                  return EmptyCard();
+                  return GenericCard(null);
                 }));
   }
 }
 
-class EmptyCard extends StatelessWidget {
-  const EmptyCard({Key? key}) : super(key: key);
+class GenericCard extends StatefulWidget {
+  GenericCard(this.pokemon);
+  final dynamic pokemon;
 
   @override
+  State<GenericCard> createState() => _GenericCardState();
+}
+
+class _GenericCardState extends State<GenericCard> {
+  @override
   Widget build(BuildContext context) {
+    var isPokemon = widget.pokemon != null;
     return Padding(
       padding: const EdgeInsets.fromLTRB(3, 5, 3, 0),
       child: Card(
-        child: Column(children: [
-          Text("Pokemon name"),
-          Image.asset('assets/images/noimage.jpg'),
-          Row(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 10),
-                child: Text(
-                  "Type",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10, right: 10),
-                child: Text("Weight", style: TextStyle(fontSize: 12)),
-              ),
-            ],
-          )
-        ]),
+              isPokemon
+                  ? Text(
+                      "${widget.pokemon["name"]}",
+                      style: TextStyle(fontSize: 20),
+                    )
+                  : Text(
+                      "Pokemon name",
+                      style: TextStyle(fontSize: 20),
+                    ),
+              isPokemon
+                  ? Image.network(widget.pokemon["sprite"])
+                  : Image.asset('assets/images/noimage.jpg'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5, left: 10),
+                    child: isPokemon
+                        ? Text(widget.pokemon["type"],
+                            style: TextStyle(fontSize: 16))
+                        : Text(
+                            "Type",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5, right: 10),
+                    child: isPokemon
+                        ? Text(widget.pokemon["weight"],
+                            style: TextStyle(fontSize: 16))
+                        : Text("Weight", style: TextStyle(fontSize: 16)),
+                  ),
+                ],
+              )
+            ]),
       ),
     );
   }

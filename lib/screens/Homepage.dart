@@ -13,20 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
-    super.initState();
-    Provider.of<PokeProvider>(context, listen: false).getData();
-  }
-
-  Future<void> _refreshData(BuildContext context) async {
-    await Provider.of<PokeProvider>(context, listen: false).getData();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final data = Provider.of<PokeProvider>(context);
-    final pokemonsData = data.pokeList;
-
     return Scaffold(
         body: SafeArea(
       child: Container(
@@ -60,21 +47,6 @@ class _HomePageState extends State<HomePage> {
             ),
             SearchBar(),
             PokemonGrid(),
-            // Expanded(
-            //     child: data.isLoading
-            //         ? Center(child: CircularProgressIndicator())
-            //         : RefreshIndicator(
-            //             onRefresh: () => _refreshData(context),
-            //             child: ListView(
-            //               padding: EdgeInsets.all(4),
-            //               children: [
-            //                 Column(
-            //                     children: pokemonsData
-            //                         .map((item) => singleCard(item, context))
-            //                         .toList()),
-            //               ],
-            //             ),
-            //           )),
           ],
         ),
       ),
